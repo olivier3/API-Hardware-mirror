@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  # Your API service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "15000:15000" # Map host port 8080 to container port 80

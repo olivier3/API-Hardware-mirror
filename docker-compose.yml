@@ -3,8 +3,9 @@ version: '3.8'
 services:
   # Your API service
   api:
+    container_name: ESP32Api
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "15000:15000" # Map host port 8080 to container port 80
+      - "15000:15000"

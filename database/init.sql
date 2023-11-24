@@ -1,7 +1,7 @@
 USE esp32db;
 
 -- Create a table to store temperature and humidity data
-CREATE TABLE IF NOT EXISTS SensorData (
+CREATE TABLE IF NOT EXISTS HouseData (
     id INT AUTO_INCREMENT PRIMARY KEY,
     espId INT NOT NULL,
     userId INT NOT NULL,

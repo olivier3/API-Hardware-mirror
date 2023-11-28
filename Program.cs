@@ -10,4 +10,7 @@ app.Urls.Add("http://*:15000");
 app.MapPost("/updateTemp",
     (HouseDataDb db, HttpContext httpContext) => Esp.UpdateTemp(db, httpContext));
 
+app.MapPost("/link", 
+    (HouseDataDb db, HttpContext httpContext) => Mirror.LinkMirror(db, httpContext));
+
 app.Run();

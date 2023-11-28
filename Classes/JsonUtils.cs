@@ -1,7 +1,7 @@
 /// <summary>
-/// JSON class model for the weather.
+/// JSON class model for the temperature.
 /// </summary>
-class WeatherJSON
+class TemperatureJSON
 {
     public int espId { get; set; }
     public double temperature { get; set; }
@@ -19,8 +19,16 @@ class LinkQRJSON
 /// <summary>
 /// JSON class model for the esp data sent to client.
 /// </summary>
-class EspData {
+class EspData
+{
     public double temperature { get; set; }
+    public double humidity { get; set; }
+}
+/// JSON class model for the humidity.
+/// </summary>
+class HumidityJSON
+{
+    public int espId { get; set; }
     public double humidity { get; set; }
 }
 

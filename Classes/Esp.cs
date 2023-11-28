@@ -1,8 +1,17 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 
+/// <summary>
+/// Static class for the ESP 32.
+/// </summary>
 static class Esp
 {
+    /// <summary>
+    /// Function to update the esp 32 temperature in the database
+    /// </summary>
+    /// <param name="db">Database context</param>
+    /// <param name="httpContext">Context of the http request</param>
+    /// <returns>Return the http status code and message</returns>
     async public static Task<IResult> UpdateTemp(HouseDataDb db, HttpContext httpContext)
     {
         WeatherJSON? content = await JsonSerializer.DeserializeAsync<WeatherJSON>(httpContext.Request.Body);

@@ -1,3 +1,6 @@
+/// <summary>
+/// Database class model for the ESP 32 data.
+/// </summary>
 public class HouseData
 {
     public int Id { get; set; }
@@ -6,6 +9,9 @@ public class HouseData
     public double Temperature { get; set; }
     public double Humidity { get; set; }
 
+    /// <summary>
+    /// HouseData contructor.
+    /// </summary>
     public HouseData()
     {
         EspId = 0;

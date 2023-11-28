@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 
+/// <summary>
+/// Database context to interact with the database.
+/// </summary>
 class HouseDataDb : DbContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

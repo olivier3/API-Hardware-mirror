@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 public class HouseData
 {
     public int Id { get; set; }

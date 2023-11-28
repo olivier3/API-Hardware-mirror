@@ -13,4 +13,7 @@ app.MapPost("/updateTemp",
 app.MapPost("/updateHumidity", 
     (HouseDataDb db, HttpContext httpContext) => Esp.UpdateHumidity(db, httpContext));
 
+app.MapPost("/link", 
+    (HouseDataDb db, HttpContext httpContext) => Mirror.LinkMirror(db, httpContext));
+
 app.Run();

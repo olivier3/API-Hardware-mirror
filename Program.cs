@@ -10,4 +10,7 @@ app.Urls.Add("http://*:15000");
 app.MapPost("/updateTemp",
     (HouseDataDb db, HttpContext httpContext) => Esp.UpdateTemp(db, httpContext));
 
+app.MapPost("/updateHumidity", 
+    (HouseDataDb db, HttpContext httpContext) => Esp.UpdateHumidity(db, httpContext));
+
 app.Run();

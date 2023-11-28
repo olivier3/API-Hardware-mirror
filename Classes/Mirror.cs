@@ -2,8 +2,17 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 
+/// <summary>
+/// Class for the mirror request.
+/// </summary>
 static class Mirror
 {
+    /// <summary>
+    /// Function to link the mirror and the esp32
+    /// </summary>
+    /// <param name="db">Database context</param>
+    /// <param name="httpContext">Http request context</param>
+    /// <returns>Http status code and message or value</returns>
     async internal static Task<IResult> LinkMirror(HouseDataDb db, HttpContext httpContext)
     {
         LinkQRJSON? content = await JsonSerializer.DeserializeAsync<LinkQRJSON>(httpContext.Request.Body);

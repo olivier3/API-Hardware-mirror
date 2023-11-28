@@ -16,6 +16,9 @@ class LinkQRJSON
     public int espId { get; set; }
 }
 
+/// <summary>
+/// JSON class model for the esp data sent to client.
+/// </summary>
 class EspData {
     public double temperature { get; set; }
     public double humidity { get; set; }

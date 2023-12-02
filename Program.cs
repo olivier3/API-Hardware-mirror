@@ -1,8 +1,14 @@
+using System.Collections.Concurrent;
+using System.Net.WebSockets;
+using System.Text.Json;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<HouseDataDb>();
 
 var app = builder.Build();
+
+var webSocketsDict = new ConcurrentDictionary<string, WebSocket>();
 
 // Set the API port that it listen on
 app.Urls.Add("http://*:15000");
@@ -14,14 +20,19 @@ var webSocketOptions = new WebSocketOptions
 
 app.UseWebSockets(webSocketOptions);
 
-app.Use(async (context, next) =>
+app.MapGet("/ws",
+    async (HouseDataDb db, HttpContext context) =>
 {
-    if (context.Request.Path == "/ws")
+    if (context.WebSockets.IsWebSocketRequest)
     {
-        if (context.WebSockets.IsWebSocketRequest)
+        if (context.Request.Query.Count() == 1 && context.Request.Query["userId"].Count == 1)
         {
             using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-            await WS.Echo(webSocket);
+            var userId = context.Request.Query["userId"];
+            Console.WriteLine(userId);
+            webSocketsDict.TryAdd(userId, webSocket);
+            Console.WriteLine("Logged");
+            await WS.Echo(webSocket, webSocketsDict);
         }
         else
         {
@@ -30,9 +41,8 @@ app.Use(async (context, next) =>
     }
     else
     {
-        await next(context);
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
     }
-
 });
 
 app.MapPost("/updateTemp",

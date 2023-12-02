@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "NDzIo5iyCoIIiNlp7Qhq4h6Gk9f5mAUs1MSXH1czmMhrK311jVFy32nbr1XZdPhJwBb9OJIzByNS0b7uKQJYkQ==",
+  "dgSpecHash": "Ykcq/O3miejM2DMfSTpsP701WdWDsI4clR0ij/wMU9ZjjcXrO0Zwjzx1KQDn/6zF5P+9UTh9/CaptIIekW06lg==",
   "success": true,
   "projectFilePath": "C:\\Users\\olivi\\Desktop\\miroirESPApi\\miroirESPApi.csproj",
   "expectedPackageFiles": [
@@ -18,6 +18,7 @@
     "C:\\Users\\olivi\\.nuget\\packages\\microsoft.extensions.options\\7.0.0\\microsoft.extensions.options.7.0.0.nupkg.sha512",
     "C:\\Users\\olivi\\.nuget\\packages\\microsoft.extensions.primitives\\7.0.0\\microsoft.extensions.primitives.7.0.0.nupkg.sha512",
     "C:\\Users\\olivi\\.nuget\\packages\\mysqlconnector\\2.2.5\\mysqlconnector.2.2.5.nupkg.sha512",
+    "C:\\Users\\olivi\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\olivi\\.nuget\\packages\\pomelo.entityframeworkcore.mysql\\7.0.0\\pomelo.entityframeworkcore.mysql.7.0.0.nupkg.sha512"
   ],
   "logs": []

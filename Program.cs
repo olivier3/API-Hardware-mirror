@@ -30,7 +30,7 @@ app.MapGet("/ws",
             using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
             var userId = context.Request.Query["userId"];
             webSocketsDict.TryAdd(userId, webSocket);
-            await WS.HandleConnection(webSocket, webSocketsDict, db);
+            await WS.HandleConnection(webSocket, db, userId);
         }
         else
         {
@@ -42,6 +42,10 @@ app.MapGet("/ws",
         context.Response.StatusCode = StatusCodes.Status400BadRequest;
     }
 });
+
+app.MapPost("/notify",
+    (ConcurrentDictionary<string, WebSocket> webSocketsDict, HouseDataDb db, HttpContext httpContext) =>
+        WS.Notify(webSocketsDict, db, httpContext));
 
 app.MapPost("/updateTemp",
     (HouseDataDb db, HttpContext httpContext) => Esp.UpdateTemp(db, httpContext));

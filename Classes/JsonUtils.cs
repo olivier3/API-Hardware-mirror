@@ -41,7 +41,7 @@ class MessageJSON
 }
 
 /// <summary>
-/// JSON class model for espId.
+/// JSON class model for espId .
 /// </summary>
 class EspIdJSON
 {

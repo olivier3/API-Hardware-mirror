@@ -2,17 +2,16 @@ using System.Collections.Concurrent;
 using System.Data.Common;
 using System.Net.WebSockets;
 using System.Text;
-using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 class WS
 {
-    public static async Task Echo(WebSocket webSocket, ConcurrentDictionary<string, WebSocket> webSocketsDict)
+    public static async Task HandleConnection(WebSocket webSocket, ConcurrentDictionary<string, WebSocket> webSocketsDict, HouseDataDb db)
     {
-
         var buffer = new byte[1024 * 4];
-        WebSocketReceiveResult receiveResult = null;
+        WebSocketReceiveResult? receiveResult = null;
+        EspIdJSON espId;
+        IQueryable<HouseData> items = null;
 
         do
         {
@@ -22,22 +21,28 @@ class WS
             if (receiveResult.MessageType == WebSocketMessageType.Text)
             {
                 string message = Encoding.UTF8.GetString(buffer, 0, receiveResult.Count);
-                var receivedMessage = JsonConvert.DeserializeObject<TemperatureJSON>(message);
-
-                Console.WriteLine($"Received: {receivedMessage}");
+                Console.WriteLine(message);
+                espId = JsonSerializer.Deserialize<EspIdJSON>(message);
+                items = db.HouseData.Where(x => x.EspId.ToString() == espId.espId);
             }
 
-            foreach (var item in webSocketsDict)
+            if (items != null)
             {
-                await item.Value.SendAsync(
-                    new ArraySegment<byte>(buffer, 0, receiveResult.Count),
-                    receiveResult.MessageType,
-                    receiveResult.EndOfMessage,
-                    CancellationToken.None);
+                foreach (var item in items)
+                {
+                    if (webSocketsDict.ContainsKey(item.UserId.ToString()))
+                    {
+                        webSocketsDict.TryGetValue(item.UserId.ToString(),out WebSocket ws); 
+                        await ws.SendAsync(
+                            new ArraySegment<byte>(buffer, 0, receiveResult.Count),
+                            receiveResult.MessageType,
+                            receiveResult.EndOfMessage,
+                            CancellationToken.None);
+                    }
+                }
             }
         }
         while (!receiveResult.CloseStatus.HasValue);
-
 
         await webSocket.CloseAsync(
             receiveResult.CloseStatus.Value,

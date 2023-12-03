@@ -29,10 +29,8 @@ app.MapGet("/ws",
         {
             using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
             var userId = context.Request.Query["userId"];
-            Console.WriteLine(userId);
             webSocketsDict.TryAdd(userId, webSocket);
-            Console.WriteLine("Logged");
-            await WS.Echo(webSocket, webSocketsDict);
+            await WS.HandleConnection(webSocket, webSocketsDict, db);
         }
         else
         {

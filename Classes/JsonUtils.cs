@@ -10,14 +10,6 @@ class TemperatureJSON
 /// <summary>
 /// JSON class model for the QR code link.
 /// </summary>
-class UserIdJSON
-{
-    public int userId { get; set; }
-}
-
-/// <summary>
-/// JSON class model for the QR code link.
-/// </summary>
 class LinkQRJSON
 {
     public int userId { get; set; }
@@ -46,4 +38,12 @@ class HumidityJSON
 class MessageJSON
 {
     public required string message { get; set; }
+}
+
+/// <summary>
+/// JSON class model for espId.
+/// </summary>
+class EspIdJSON
+{
+    public required string espId { get; set; }
 }

@@ -16,7 +16,8 @@ class WS
     /// <param name="db">The database context</param>
     /// <param name="userId">The userId of the of the connected WebSocket</param>
     /// <returns>A Task that handle the WebSocket connections</returns>
-    public static async Task HandleConnection(WebSocket webSocket, HouseDataDb db, int userId)
+    public static async Task HandleConnection(WebSocket webSocket, HouseDataDb db,
+    int userId, ConcurrentDictionary<string, WebSocket> webSocketsDict)
     {
         var buffer = new byte[1024 * 4];
         WebSocketReceiveResult? receiveResult;
@@ -43,10 +44,15 @@ class WS
         }
         while (!receiveResult.CloseStatus.HasValue);
 
-        await webSocket.CloseAsync(
-            receiveResult.CloseStatus.Value,
-            receiveResult.CloseStatusDescription,
-            CancellationToken.None);
+        if (webSocketsDict.TryRemove(userId.ToString(), out webSocket))
+        {
+            await webSocket.CloseAsync(
+                receiveResult.CloseStatus.Value,
+                receiveResult.CloseStatusDescription,
+                CancellationToken.None);
+        }
+
+
     }
 
     /// <summary>

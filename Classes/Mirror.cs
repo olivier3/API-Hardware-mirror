@@ -13,7 +13,7 @@ static class Mirror
     /// <param name="db">Database context</param>
     /// <param name="httpContext">Http request context</param>
     /// <returns>Http status code and message or value</returns>
-    async internal static Task<IResult> LinkMirror(HouseDataDb db, HttpContext httpContext, System.Collections.Concurrent.ConcurrentDictionary<string, System.Net.WebSockets.WebSocket> webSocketsDict)
+    async internal static Task<IResult> LinkMirror(HouseDataDb db, HttpContext httpContext)
     {
         LinkQRJSON? content = await JsonSerializer.DeserializeAsync<LinkQRJSON>(httpContext.Request.Body);
 

@@ -4,20 +4,33 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Primitives;
 
+/// <summary>
+/// Class for the WebSocket.
+/// </summary>
 class WS
 {
+    /// <summary>
+    /// Function to handle the connection to a WebSocket.
+    /// </summary>
+    /// <param name="webSocket">The connected WebSocket</param>
+    /// <param name="db">The database context</param>
+    /// <param name="userId">The userId of the of the connected WebSocket</param>
+    /// <returns>A Task that handle the WebSocket connections</returns>
     public static async Task HandleConnection(WebSocket webSocket, HouseDataDb db, int userId)
     {
         var buffer = new byte[1024 * 4];
         WebSocketReceiveResult? receiveResult;
+        HouseData? item = db.HouseData.FirstOrDefault(x => x.UserId == userId);
+        string jsonMessage = "";
 
-        var item = db.HouseData.FirstOrDefault(x => x.UserId == userId);
-
-        string jsonMessage =
+        if (item != null)
+        {
+            jsonMessage =
                 "{" +
                     "\"temperature\":" + item.Temperature + "," +
                     "\"humidity\":" + item.Humidity +
-                "}";
+               "}";
+        }
 
         byte[] bytes = Encoding.UTF8.GetBytes(jsonMessage);
         ArraySegment<byte> bufferSend = new ArraySegment<byte>(bytes);
@@ -36,16 +49,23 @@ class WS
             CancellationToken.None);
     }
 
+    /// <summary>
+    /// Notify function to call when values in the ESP 32 are updated.
+    /// </summary>
+    /// <param name="db">Database context</param>
+    /// <param name="httpContext">Http request context</param>
+    /// <param name="webSocketsDict">Data structure containing all active WebSocket connections</param>
+    /// <returns>The result if the request is successfull or not</returns>
     internal async static Task<IResult> Notify(HouseDataDb db, HttpContext httpContext, ConcurrentDictionary<string, WebSocket> webSocketsDict)
     {
-        Console.WriteLine("Notify called");
         WebSocketReceiveResult? receiveResult = null;
         IQueryable<HouseData> items = null;
-
-        EspIdJSON espId = await JsonSerializer.DeserializeAsync<EspIdJSON>(httpContext.Request.Body);
+        EspIdJSON? espId = await JsonSerializer.DeserializeAsync<EspIdJSON>(httpContext.Request.Body);
         items = db.HouseData.Where(x => x.EspId == espId.espId);
 
-        if (items != null)
+        Console.WriteLine(items.Count());
+
+        if (items != null && items.Count() > 0)
         {
             foreach (var item in items)
             {

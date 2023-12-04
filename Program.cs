@@ -33,7 +33,7 @@ app.MapGet("/ws",
             using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
             int.TryParse(context.Request.Query["userId"], out int userId);
             webSocketsDict.TryAdd(userId.ToString(), webSocket);
-            await WS.HandleConnection(webSocket, db, userId);
+            await WS.HandleConnection(webSocket, db, userId, webSocketsDict);
         }
         else
         {

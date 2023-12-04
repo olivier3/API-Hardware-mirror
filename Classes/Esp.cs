@@ -37,7 +37,7 @@ static class Esp
             await db.SaveChangesAsync();
         }
 
-        await WS.SendWebSocketData(db, WS.webSocketsDict, content.espId);
+        await WS.SendWebSocketData(db, content.espId);
 
         var res = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"Temperature updated\"}");
 
@@ -75,7 +75,7 @@ static class Esp
             await db.SaveChangesAsync();
         }
 
-        await WS.SendWebSocketData(db, WS.webSocketsDict, content.espId);
+        await WS.SendWebSocketData(db, content.espId);
 
         var res = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"Humidity updated\"}");
 

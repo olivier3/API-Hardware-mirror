@@ -30,8 +30,15 @@ app.MapGet("/ws",
         {
             using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
             int.TryParse(context.Request.Query["userId"], out int userId);
-            WS.webSocketsDict.TryAdd(userId.ToString(), webSocket);
-            await WS.HandleConnection(webSocket, db, userId, WS.webSocketsDict);
+
+            WS.webSocketsDict.TryGetValue(userId.ToString(), out List<WebSocket> wsList);
+            if (wsList is null)
+            {
+                wsList = new List<WebSocket>();
+            }
+            wsList.Add(webSocket);
+            WS.webSocketsDict.TryAdd(userId.ToString(), wsList);
+            await WS.HandleConnection(webSocket, db, userId);
         }
         else
         {

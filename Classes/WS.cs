@@ -9,8 +9,8 @@ using Microsoft.Extensions.Primitives;
 /// </summary>
 class WS
 {
-    public static ConcurrentDictionary<string, WebSocket> webSocketsDict { get; set; } =
-        new ConcurrentDictionary<string, WebSocket>();
+    public static ConcurrentDictionary<string, List<WebSocket>> webSocketsDict { get; set; } =
+        new ConcurrentDictionary<string, List<WebSocket>>();
     /// <summary>
     /// Function to handle the connection to a WebSocket.
     /// </summary>
@@ -19,7 +19,7 @@ class WS
     /// <param name="userId">The userId of the of the connected WebSocket</param>
     /// <returns>A Task that handle the WebSocket connections</returns>
     public static async Task HandleConnection(WebSocket webSocket, HouseDataDb db,
-    int userId, ConcurrentDictionary<string, WebSocket> webSocketsDict)
+    int userId)
     {
         var buffer = new byte[1024 * 4];
         WebSocketReceiveResult? receiveResult;
@@ -46,8 +46,10 @@ class WS
         }
         while (!receiveResult.CloseStatus.HasValue);
 
-        if (webSocketsDict.TryRemove(userId.ToString(), out webSocket))
+        if (webSocketsDict.TryRemove(userId.ToString(), out List<WebSocket> wsList))
         {
+            wsList.Remove(webSocket);
+            webSocketsDict.TryAdd(userId.ToString(), wsList);
             await webSocket.CloseAsync(
                 receiveResult.CloseStatus.Value,
                 receiveResult.CloseStatusDescription,
@@ -74,7 +76,7 @@ class WS
         {
             foreach (var item in items)
             {
-                if (webSocketsDict.TryGetValue(item.UserId.ToString(), out WebSocket ws))
+                if (webSocketsDict.TryGetValue(item.UserId.ToString(), out List<WebSocket> wsList))
                 {
                     string jsonMessage =
                     "{" +
@@ -83,7 +85,10 @@ class WS
 
                     byte[] bytes = Encoding.UTF8.GetBytes(jsonMessage);
                     ArraySegment<byte> buffer = new ArraySegment<byte>(bytes);
-                    await ws.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+                    foreach (var ws in wsList)
+                    {
+                        await ws.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+                    }
                 }
             }
 
@@ -102,7 +107,7 @@ class WS
     /// <param name="webSocketsDict">Data structure with all active WebSocket connections</param>
     /// <param name="espId">Esp 32 ID</param>
     /// <returns></returns>
-    internal async static Task SendWebSocketData(HouseDataDb db, ConcurrentDictionary<string, WebSocket> webSocketsDict, string espId)
+    internal async static Task SendWebSocketData(HouseDataDb db, string espId)
     {
         IQueryable<HouseData>? items = null;
         items = db.HouseData.Where(x => x.EspId == espId);
@@ -111,7 +116,7 @@ class WS
         {
             foreach (var item in items)
             {
-                if (webSocketsDict.TryGetValue(item.UserId.ToString(), out WebSocket ws))
+                if (webSocketsDict.TryGetValue(item.UserId.ToString(), out List<WebSocket> wsList))
                 {
                     string jsonMessage =
                     "{" +
@@ -120,7 +125,10 @@ class WS
                     "}";
                     byte[] bytes = Encoding.UTF8.GetBytes(jsonMessage);
                     ArraySegment<byte> buffer = new ArraySegment<byte>(bytes);
-                    await ws.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+                    foreach (var ws in wsList)
+                    { 
+                        await ws.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+                    }
                 }
             }
         }

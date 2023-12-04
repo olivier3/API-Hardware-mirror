@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,8 +29,8 @@ app.MapGet("/ws",
         if (context.Request.Query.Count() == 1 && context.Request.Query["userId"].Count == 1)
         {
             using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-            var userId = context.Request.Query["userId"];
-            webSocketsDict.TryAdd(userId, webSocket);
+            int.TryParse(context.Request.Query["userId"], out int userId);
+            webSocketsDict.TryAdd(userId.ToString(), webSocket);
             await WS.HandleConnection(webSocket, db, userId);
         }
         else

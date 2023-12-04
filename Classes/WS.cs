@@ -6,12 +6,12 @@ using Microsoft.Extensions.Primitives;
 
 class WS
 {
-    public static async Task HandleConnection(WebSocket webSocket, HouseDataDb db, StringValues userId)
+    public static async Task HandleConnection(WebSocket webSocket, HouseDataDb db, int userId)
     {
         var buffer = new byte[1024 * 4];
         WebSocketReceiveResult? receiveResult;
 
-        var item = db.HouseData.FirstOrDefault(x => x.UserId == userId.ToString());
+        var item = db.HouseData.FirstOrDefault(x => x.UserId == userId);
 
         string jsonMessage =
                 "{" +
@@ -36,10 +36,10 @@ class WS
             CancellationToken.None);
     }
 
-    internal static void Notify(HouseDataDb db, HttpContext httpContext, ConcurrentDictionary<string, WebSocket> webSocketsDict)
+    internal async static Task<IResult> Notify(HouseDataDb db, HttpContext httpContext, ConcurrentDictionary<string, WebSocket> webSocketsDict)
     {
         Console.WriteLine("Notify called");
-        /*WebSocketReceiveResult? receiveResult = null;
+        WebSocketReceiveResult? receiveResult = null;
         IQueryable<HouseData> items = null;
 
         EspIdJSON espId = await JsonSerializer.DeserializeAsync<EspIdJSON>(httpContext.Request.Body);
@@ -62,10 +62,11 @@ class WS
                 }
             }
 
-            return Results.Ok();
+            var succesMessage = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"System notified\"}");
+            return Results.Ok(succesMessage);
         }
 
-        var noConnection = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"No user conection found\"}");
-        return Results.BadRequest(noConnection);*/
+        var noConnection = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"No user connection found\"}");
+        return Results.BadRequest(noConnection);
     }
 }

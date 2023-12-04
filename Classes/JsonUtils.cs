@@ -12,7 +12,7 @@ class TemperatureJSON
 /// </summary>
 class LinkQRJSON
 {
-    public required string userId { get; set; }
+    public required int userId { get; set; }
     public required string espId { get; set; }
 }
 

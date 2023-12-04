@@ -43,7 +43,7 @@ class WS
         IQueryable<HouseData> items = null;
 
         EspIdJSON espId = await JsonSerializer.DeserializeAsync<EspIdJSON>(httpContext.Request.Body);
-        items = db.HouseData.Where(x => x.EspId.ToString() == espId.espId);
+        items = db.HouseData.Where(x => x.EspId == espId.espId);
 
         if (items != null)
         {

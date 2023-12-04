@@ -19,8 +19,10 @@ var webSocketOptions = new WebSocketOptions
     KeepAliveInterval = TimeSpan.FromMinutes(2)
 };
 
+// Set the options for the WebSocket
 app.UseWebSockets(webSocketOptions);
 
+// API route to connect to a WebSocket.
 app.MapGet("/ws",
     async (HouseDataDb db, HttpContext context) =>
 {
@@ -44,16 +46,20 @@ app.MapGet("/ws",
     }
 });
 
+// API route to notify the system for updated values.
 app.MapPost("/notify",
     (HouseDataDb db, HttpContext httpContext) =>
         WS.Notify(db, httpContext, webSocketsDict));
 
+// API route to update temperature
 app.MapPost("/updateTemp",
     (HouseDataDb db, HttpContext httpContext) => Esp.UpdateTemp(db, httpContext));
 
+// API route to update humidity data
 app.MapPost("/updateHumidity",
     (HouseDataDb db, HttpContext httpContext) => Esp.UpdateHumidity(db, httpContext));
 
+// API route to link user to esp32
 app.MapPost("/link",
     (HouseDataDb db, HttpContext httpContext) => Mirror.LinkMirror(db, httpContext));
 

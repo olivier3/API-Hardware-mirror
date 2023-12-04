@@ -3,7 +3,7 @@
 /// </summary>
 class TemperatureJSON
 {
-    public int espId { get; set; }
+    public required string espId { get; set; }
     public double temperature { get; set; }
 }
 
@@ -12,8 +12,8 @@ class TemperatureJSON
 /// </summary>
 class LinkQRJSON
 {
-    public int userId { get; set; }
-    public int espId { get; set; }
+    public required int userId { get; set; }
+    public required string espId { get; set; }
 }
 
 /// <summary>
@@ -28,7 +28,7 @@ class EspData
 /// </summary>
 class HumidityJSON
 {
-    public int espId { get; set; }
+    public required string espId { get; set; }
     public double humidity { get; set; }
 }
 
@@ -38,4 +38,12 @@ class HumidityJSON
 class MessageJSON
 {
     public required string message { get; set; }
+}
+
+/// <summary>
+/// JSON class model for espId .
+/// </summary>
+class EspIdJSON
+{
+    public required string espId { get; set; }
 }

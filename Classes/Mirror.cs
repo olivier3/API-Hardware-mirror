@@ -13,7 +13,7 @@ static class Mirror
     /// <param name="db">Database context</param>
     /// <param name="httpContext">Http request context</param>
     /// <returns>Http status code and message or value</returns>
-    async internal static Task<IResult> LinkMirror(HouseDataDb db, HttpContext httpContext)
+    async internal static Task<IResult> LinkMirror(HouseDataDb db, HttpContext httpContext, System.Collections.Concurrent.ConcurrentDictionary<string, System.Net.WebSockets.WebSocket> webSocketsDict)
     {
         LinkQRJSON? content = await JsonSerializer.DeserializeAsync<LinkQRJSON>(httpContext.Request.Body);
 
@@ -24,13 +24,6 @@ static class Mirror
             var noEspData = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"No esp data found\"}");
 
             return Results.BadRequest(noEspData);
-        }
-
-        if (content.espId <= 0 || content.userId <= 0)
-        {
-            var badValue = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"Invalid value sent\"}");
-
-            return Results.BadRequest(badValue);
         }
 
         item.UserId = content.userId;

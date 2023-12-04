@@ -12,18 +12,11 @@ static class Esp
     /// <param name="db">Database context</param>
     /// <param name="httpContext">Context of the http request</param>
     /// <returns>Return the http status code and message</returns>
-    async internal static Task<IResult> UpdateTemp(HouseDataDb db, HttpContext httpContext)
+    async internal static Task<IResult> UpdateTemp(HouseDataDb db, HttpContext httpContext, System.Collections.Concurrent.ConcurrentDictionary<string, System.Net.WebSockets.WebSocket> webSocketsDict)
     {
         TemperatureJSON? content = await JsonSerializer.DeserializeAsync<TemperatureJSON>(httpContext.Request.Body);
 
         var item = await db.HouseData.FirstOrDefaultAsync(x => x.EspId == content.espId);
-
-        if (content.espId <= 0)
-        {
-            var error = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"Incorrect value\"}");
-
-            return Results.BadRequest(error);
-        }
 
         if (item != null)
         {
@@ -44,6 +37,8 @@ static class Esp
             await db.SaveChangesAsync();
         }
 
+        await WS.SendWebSocketData(db, webSocketsDict, content.espId);
+
         var res = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"Temperature updated\"}");
 
         return Results.Ok(res);
@@ -55,18 +50,11 @@ static class Esp
     /// <param name="db">Database context</param>
     /// <param name="httpContext">Context of the http request</param>
     /// <returns>Return the http status code and message</returns>
-    async internal static Task<IResult> UpdateHumidity(HouseDataDb db, HttpContext httpContext)
+    async internal static Task<IResult> UpdateHumidity(HouseDataDb db, HttpContext httpContext, System.Collections.Concurrent.ConcurrentDictionary<string, System.Net.WebSockets.WebSocket> webSocketsDict)
     {
         HumidityJSON? content = await JsonSerializer.DeserializeAsync<HumidityJSON>(httpContext.Request.Body);
 
         var item = await db.HouseData.FirstOrDefaultAsync(x => x.EspId == content.espId);
-
-        if (content.espId <= 0)
-        {
-            var error = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"Incorrect value\"}");
-
-            return Results.BadRequest(error);
-        }
 
         if (item != null)
         {
@@ -86,6 +74,8 @@ static class Esp
 
             await db.SaveChangesAsync();
         }
+
+        await WS.SendWebSocketData(db, webSocketsDict, content.espId);
 
         var res = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"Humidity updated\"}");
 

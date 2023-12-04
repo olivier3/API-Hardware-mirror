@@ -53,14 +53,14 @@ app.MapPost("/notify",
 
 // API route to update temperature
 app.MapPost("/updateTemp",
-    (HouseDataDb db, HttpContext httpContext) => Esp.UpdateTemp(db, httpContext));
+    (HouseDataDb db, HttpContext httpContext) => Esp.UpdateTemp(db, httpContext, webSocketsDict));
 
 // API route to update humidity data
 app.MapPost("/updateHumidity",
-    (HouseDataDb db, HttpContext httpContext) => Esp.UpdateHumidity(db, httpContext));
+    (HouseDataDb db, HttpContext httpContext) => Esp.UpdateHumidity(db, httpContext, webSocketsDict));
 
 // API route to link user to esp32
 app.MapPost("/link",
-    (HouseDataDb db, HttpContext httpContext) => Mirror.LinkMirror(db, httpContext));
+    (HouseDataDb db, HttpContext httpContext) => Mirror.LinkMirror(db, httpContext, webSocketsDict));
 
 app.Run();

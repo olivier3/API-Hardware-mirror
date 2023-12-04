@@ -58,12 +58,46 @@ class WS
     /// <returns>The result if the request is successfull or not</returns>
     internal async static Task<IResult> Notify(HouseDataDb db, HttpContext httpContext, ConcurrentDictionary<string, WebSocket> webSocketsDict)
     {
-        WebSocketReceiveResult? receiveResult = null;
         IQueryable<HouseData> items = null;
         EspIdJSON? espId = await JsonSerializer.DeserializeAsync<EspIdJSON>(httpContext.Request.Body);
         items = db.HouseData.Where(x => x.EspId == espId.espId);
 
-        Console.WriteLine(items.Count());
+        if (items != null && items.Count() > 0)
+        {
+            foreach (var item in items)
+            {
+                if (webSocketsDict.TryGetValue(item.UserId.ToString(), out WebSocket ws))
+                {
+                    string jsonMessage =
+                    "{" +
+                        "\"notify\":\"Bonjour\"" +
+                    "}";
+
+                    byte[] bytes = Encoding.UTF8.GetBytes(jsonMessage);
+                    ArraySegment<byte> buffer = new ArraySegment<byte>(bytes);
+                    await ws.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+                }
+            }
+
+            var succesMessage = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"System notified\"}");
+            return Results.Ok(succesMessage);
+        }
+
+        var noConnection = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"No user connection found\"}");
+        return Results.BadRequest(noConnection);
+    }
+
+    /// <summary>
+    /// Function to send temperature data to WebSocket.
+    /// </summary>
+    /// <param name="db">Database context</param>
+    /// <param name="webSocketsDict">Data structure with all active WebSocket connections</param>
+    /// <param name="espId">Esp 32 ID</param>
+    /// <returns></returns>
+    internal async static Task SendWebSocketData(HouseDataDb db, ConcurrentDictionary<string, WebSocket> webSocketsDict, string espId)
+    {
+        IQueryable<HouseData>? items = null;
+        items = db.HouseData.Where(x => x.EspId == espId);
 
         if (items != null && items.Count() > 0)
         {
@@ -81,12 +115,6 @@ class WS
                     await ws.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
                 }
             }
-
-            var succesMessage = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"System notified\"}");
-            return Results.Ok(succesMessage);
         }
-
-        var noConnection = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"No user connection found\"}");
-        return Results.BadRequest(noConnection);
     }
 }

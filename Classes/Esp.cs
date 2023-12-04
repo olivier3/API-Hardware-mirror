@@ -18,13 +18,6 @@ static class Esp
 
         var item = await db.HouseData.FirstOrDefaultAsync(x => x.EspId == content.espId);
 
-        if (content.espId <= 0)
-        {
-            var error = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"Incorrect value\"}");
-
-            return Results.BadRequest(error);
-        }
-
         if (item != null)
         {
             item.Temperature = content.temperature;
@@ -60,13 +53,6 @@ static class Esp
         HumidityJSON? content = await JsonSerializer.DeserializeAsync<HumidityJSON>(httpContext.Request.Body);
 
         var item = await db.HouseData.FirstOrDefaultAsync(x => x.EspId == content.espId);
-
-        if (content.espId <= 0)
-        {
-            var error = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"Incorrect value\"}");
-
-            return Results.BadRequest(error);
-        }
 
         if (item != null)
         {

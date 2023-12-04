@@ -26,13 +26,6 @@ static class Mirror
             return Results.BadRequest(noEspData);
         }
 
-        if (content.espId <= 0 || content.userId <= 0)
-        {
-            var badValue = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"Invalid value sent\"}");
-
-            return Results.BadRequest(badValue);
-        }
-
         item.UserId = content.userId;
 
         item.EspId = content.espId;

@@ -11,14 +11,14 @@ class WS
         var buffer = new byte[1024 * 4];
         WebSocketReceiveResult? receiveResult;
 
-        var item = db.HouseData.FirstOrDefault(x => x.UserId.ToString() == userId.ToString());
+        var item = db.HouseData.FirstOrDefault(x => x.UserId == userId.ToString());
 
         string jsonMessage =
                 "{" +
                     "\"temperature\":" + item.Temperature + "," +
                     "\"humidity\":" + item.Humidity +
                 "}";
-                
+
         byte[] bytes = Encoding.UTF8.GetBytes(jsonMessage);
         ArraySegment<byte> bufferSend = new ArraySegment<byte>(bytes);
         await webSocket.SendAsync(bufferSend, WebSocketMessageType.Text, true, CancellationToken.None);
@@ -36,11 +36,10 @@ class WS
             CancellationToken.None);
     }
 
-    public static async Task<IResult> Notify(ConcurrentDictionary<string, WebSocket> webSocketsDict,
-        HouseDataDb db, HttpContext httpContext)
+    internal static void Notify(HouseDataDb db, HttpContext httpContext, ConcurrentDictionary<string, WebSocket> webSocketsDict)
     {
         Console.WriteLine("Notify called");
-        WebSocketReceiveResult? receiveResult = null;
+        /*WebSocketReceiveResult? receiveResult = null;
         IQueryable<HouseData> items = null;
 
         EspIdJSON espId = await JsonSerializer.DeserializeAsync<EspIdJSON>(httpContext.Request.Body);
@@ -67,6 +66,6 @@ class WS
         }
 
         var noConnection = JsonSerializer.Deserialize<MessageJSON>("{\"message\":\"No user conection found\"}");
-        return Results.BadRequest(noConnection);
+        return Results.BadRequest(noConnection);*/
     }
 }

@@ -44,8 +44,8 @@ app.MapGet("/ws",
 });
 
 app.MapPost("/notify",
-    (ConcurrentDictionary<string, WebSocket> webSocketsDict, HouseDataDb db, HttpContext httpContext) =>
-        WS.Notify(webSocketsDict, db, httpContext));
+    (HouseDataDb db, HttpContext httpContext) =>
+        WS.Notify(db, httpContext, webSocketsDict));
 
 app.MapPost("/updateTemp",
     (HouseDataDb db, HttpContext httpContext) => Esp.UpdateTemp(db, httpContext));

@@ -9,6 +9,8 @@ using Microsoft.Extensions.Primitives;
 /// </summary>
 class WS
 {
+    public static ConcurrentDictionary<string, WebSocket> webSocketsDict { get; set; } =
+        new ConcurrentDictionary<string, WebSocket>();
     /// <summary>
     /// Function to handle the connection to a WebSocket.
     /// </summary>
@@ -62,7 +64,7 @@ class WS
     /// <param name="httpContext">Http request context</param>
     /// <param name="webSocketsDict">Data structure containing all active WebSocket connections</param>
     /// <returns>The result if the request is successfull or not</returns>
-    internal async static Task<IResult> Notify(HouseDataDb db, HttpContext httpContext, ConcurrentDictionary<string, WebSocket> webSocketsDict)
+    internal async static Task<IResult> Notify(HouseDataDb db, HttpContext httpContext)
     {
         IQueryable<HouseData> items = null;
         EspIdJSON? espId = await JsonSerializer.DeserializeAsync<EspIdJSON>(httpContext.Request.Body);

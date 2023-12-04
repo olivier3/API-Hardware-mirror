@@ -1,25 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\olivi\\Desktop\\miroirESPApi\\miroirESPApi.csproj": {}
+    "/Users/charlo/Desktop/Project/multi/ProjetAnnee/miroirapi/miroirapihardware/miroirESPApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\olivi\\Desktop\\miroirESPApi\\miroirESPApi.csproj": {
+    "/Users/charlo/Desktop/Project/multi/ProjetAnnee/miroirapi/miroirapihardware/miroirESPApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\olivi\\Desktop\\miroirESPApi\\miroirESPApi.csproj",
+        "projectUniqueName": "/Users/charlo/Desktop/Project/multi/ProjetAnnee/miroirapi/miroirapihardware/miroirESPApi.csproj",
         "projectName": "miroirESPApi",
-        "projectPath": "C:\\Users\\olivi\\Desktop\\miroirESPApi\\miroirESPApi.csproj",
-        "packagesPath": "C:\\Users\\olivi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\olivi\\Desktop\\miroirESPApi\\obj\\",
+        "projectPath": "/Users/charlo/Desktop/Project/multi/ProjetAnnee/miroirapi/miroirapihardware/miroirESPApi.csproj",
+        "packagesPath": "/Users/charlo/.nuget/packages/",
+        "outputPath": "/Users/charlo/Desktop/Project/multi/ProjetAnnee/miroirapi/miroirapihardware/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\olivi\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/charlo/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
+          "/Users/charlo/.dotnet/sdk/7.0.306/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -70,7 +71,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/Users/charlo/.dotnet/sdk/7.0.306/RuntimeIdentifierGraph.json"
         }
       }
     }

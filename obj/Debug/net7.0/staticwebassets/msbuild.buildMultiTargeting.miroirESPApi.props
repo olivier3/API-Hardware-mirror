@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/miroirESPApi.props" />
+</Project>
